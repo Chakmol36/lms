@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import API from "../services/api";
+import API, { API_ORIGIN } from "../services/api";
 
 export default function LessonViewer() {
   const { id } = useParams();
@@ -537,7 +537,7 @@ export default function LessonViewer() {
         {course.image ? (
 
           <img
-            src={`http://localhost:5000${course.image}`}
+            src={`${API_ORIGIN}${course.image}`}
             alt={course.title}
             className="
               w-full
@@ -941,7 +941,7 @@ export default function LessonViewer() {
                             bg-black
                             mb-5
                           "
-                          src={`http://localhost:5000${lesson.video}`}
+                          src={`${API_ORIGIN}${lesson.video}`}
                         />
 
                       ) : (

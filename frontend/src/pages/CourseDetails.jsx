@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import API from "../services/api";
+import API, { API_ORIGIN } from "../services/api";
 
 export default function CourseDetails() {
   const { id } = useParams();
@@ -44,7 +44,7 @@ export default function CourseDetails() {
 
       {/* Course Image */}
       <img
-        src={`http://localhost:5000${course.image}`}
+        src={`${API_ORIGIN}${course.image}`}
         alt={course.title}
         className="w-full max-w-4xl h-[400px] object-cover rounded-2xl mb-8"
       />
@@ -79,7 +79,7 @@ export default function CourseDetails() {
             <video
               controls
               className="w-full rounded-xl"
-              src={`http://localhost:5000${lesson.video}`}
+              src={`${API_ORIGIN}${lesson.video}`}
             />
 
           </div>
@@ -119,7 +119,7 @@ export default function CourseDetails() {
               >
 
                 <source
-                  src={`http://localhost:5000${lesson.video}`}
+                  src={`${API_ORIGIN}${lesson.video}`}
                   type="video/mp4"
                 />
 

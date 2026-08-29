@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API from "../services/api";
+import API, { API_ORIGIN } from "../services/api";
 
 export default function MyCourses() {
   const [courses, setCourses] = useState([]);
@@ -58,7 +58,7 @@ export default function MyCourses() {
                 {/* COURSE IMAGE */}
                 {course.image ? (
                   <img
-                    src={`http://localhost:5000${course.image}`}
+                    src={`${API_ORIGIN}${course.image}`}
                     alt={course.title}
                     className="w-full h-48 object-cover"
                   />

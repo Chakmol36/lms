@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API from "../services/api";
+import API, { API_ORIGIN } from "../services/api";
 import { Link } from "react-router-dom";
 
 export default function Courses() {
@@ -245,7 +245,7 @@ export default function Courses() {
 
               {course.image && (
                 <img
-                  src={`http://localhost:5000${course.image}`}
+                  src={`${API_ORIGIN}${course.image}`}
                   alt={course.title}
                   className="
                     w-full
