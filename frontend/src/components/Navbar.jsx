@@ -211,6 +211,15 @@ export default function Navbar() {
       </button>
 
 
+      {menuOpen && (
+        <button
+          type="button"
+          aria-label="Close navigation menu"
+          onClick={() => setMenuOpen(false)}
+          className="fixed inset-0 z-40 bg-black/40 md:hidden"
+        />
+      )}
+
       {/* ===================================== */}
       {/* NAVIGATION */}
       {/* ===================================== */}
@@ -219,22 +228,54 @@ export default function Navbar() {
         id="primary-navigation"
         onClick={() => setMenuOpen(false)}
         className={`
-          ${menuOpen ? "flex" : "hidden"}
-          w-full
+          fixed
+          inset-y-0
+          right-0
+          z-50
+          flex
+          h-dvh
+          w-4/5
+          max-w-sm
           flex-col
           items-stretch
-          gap-3
-          pt-3
-          md:flex
+          gap-5
+          overflow-y-auto
+          bg-white
+          p-6
+          pt-6
+          shadow-2xl
+          transition-transform
+          duration-300
+          ease-in-out
+          dark:bg-gray-950
+          ${menuOpen ? "visible translate-x-0" : "invisible translate-x-full"}
+          md:visible
+          md:static
+          md:z-auto
+          md:h-auto
           md:w-auto
+          md:max-w-none
           md:flex-row
           md:flex-wrap
           md:items-center
           md:gap-6
+          md:overflow-visible
+          md:bg-transparent
+          md:p-0
           md:pt-0
+          md:shadow-none
+          md:transition-none
+          md:dark:bg-transparent
         `}
       >
-
+        <button
+          type="button"
+          onClick={() => setMenuOpen(false)}
+          aria-label="Close navigation menu"
+          className="mb-2 self-end rounded-lg px-3 py-2 text-2xl hover:bg-gray-100 dark:hover:bg-gray-800 md:hidden"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
         {/* ================================= */}
         {/* HOME */}
         {/* ================================= */}
