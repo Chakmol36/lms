@@ -1,6 +1,16 @@
 const multer = require("multer");
 const path = require("path");
 const crypto = require("crypto");
+const fs = require("fs");
+
+// Keep upload storage beside server.js, regardless of the process working directory.
+const uploadsDirectory = path.join(__dirname, "..", "uploads");
+const imagesDirectory = path.join(uploadsDirectory, "images");
+const videosDirectory = path.join(uploadsDirectory, "videos");
+
+// Create the directories before Multer handles any upload requests.
+fs.mkdirSync(imagesDirectory, { recursive: true });
+fs.mkdirSync(videosDirectory, { recursive: true });
 
 /* =========================
    IMAGE SETTINGS
@@ -8,7 +18,7 @@ const crypto = require("crypto");
 
 const imageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/images");
+    cb(null, imagesDirectory);
   },
 
   filename: (req, file, cb) => {
@@ -20,7 +30,6 @@ const imageStorage = multer.diskStorage({
     cb(null, filename);
   },
 });
-
 
 /* =========================
    VIDEO SETTINGS
@@ -28,7 +37,7 @@ const imageStorage = multer.diskStorage({
 
 const videoStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/videos");
+    cb(null, videosDirectory);
   },
 
   filename: (req, file, cb) => {
@@ -41,13 +50,11 @@ const videoStorage = multer.diskStorage({
   },
 });
 
-
 /* =========================
    IMAGE FILTER
 ========================= */
 
 const imageFileFilter = (req, file, cb) => {
-
   const allowedMimeTypes = [
     "image/jpeg",
     "image/png",
@@ -61,8 +68,7 @@ const imageFileFilter = (req, file, cb) => {
     ".webp",
   ];
 
-  const extension =
-    path.extname(file.originalname).toLowerCase();
+  const extension = path.extname(file.originalname).toLowerCase();
 
   if (
     allowedMimeTypes.includes(file.mimetype) &&
@@ -78,13 +84,11 @@ const imageFileFilter = (req, file, cb) => {
   );
 };
 
-
 /* =========================
    VIDEO FILTER
 ========================= */
 
 const videoFileFilter = (req, file, cb) => {
-
   const allowedMimeTypes = [
     "video/mp4",
     "video/webm",
@@ -97,8 +101,7 @@ const videoFileFilter = (req, file, cb) => {
     ".mov",
   ];
 
-  const extension =
-    path.extname(file.originalname).toLowerCase();
+  const extension = path.extname(file.originalname).toLowerCase();
 
   if (
     allowedMimeTypes.includes(file.mimetype) &&
@@ -114,40 +117,29 @@ const videoFileFilter = (req, file, cb) => {
   );
 };
 
-
 /* =========================
    IMAGE UPLOAD
 ========================= */
 
 const uploadImage = multer({
-
   storage: imageStorage,
-
   fileFilter: imageFileFilter,
-
   limits: {
     fileSize: 5 * 1024 * 1024, // 5 MB
   },
-
 });
-
 
 /* =========================
    VIDEO UPLOAD
 ========================= */
 
 const uploadVideo = multer({
-
   storage: videoStorage,
-
   fileFilter: videoFileFilter,
-
   limits: {
     fileSize: 500 * 1024 * 1024, // 500 MB
   },
-
 });
-
 
 /* =========================
    EXPORT
