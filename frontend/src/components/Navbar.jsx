@@ -7,6 +7,8 @@ export default function Navbar() {
   // CENTRAL THEME CONTROLLER
   // =========================================
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const [darkMode, setDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
 
@@ -180,17 +182,57 @@ export default function Navbar() {
 
 
       {/* ===================================== */}
+      {/* MOBILE MENU TOGGLE */}
+      {/* ===================================== */}
+
+      <button
+        type="button"
+        onClick={() => setMenuOpen((open) => !open)}
+        aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-expanded={menuOpen}
+        aria-controls="primary-navigation"
+        className="
+          md:hidden
+          w-10
+          h-10
+          rounded-lg
+          flex
+          items-center
+          justify-center
+          text-2xl
+          hover:bg-gray-100
+          dark:hover:bg-gray-800
+          focus:outline-none
+          focus:ring-2
+          focus:ring-blue-500
+        "
+      >
+        <span aria-hidden="true">{menuOpen ? "×" : "☰"}</span>
+      </button>
+
+
+      {/* ===================================== */}
       {/* NAVIGATION */}
       {/* ===================================== */}
 
       <div
-        className="
-          flex
-          flex-wrap
+        id="primary-navigation"
+        onClick={() => setMenuOpen(false)}
+        className={`
+          ${menuOpen ? "flex" : "hidden"}
+          w-full
+          flex-col
+          items-stretch
           gap-3
+          pt-3
+          md:flex
+          md:w-auto
+          md:flex-row
+          md:flex-wrap
+          md:items-center
           md:gap-6
-          items-center
-        "
+          md:pt-0
+        `}
       >
 
         {/* ================================= */}
