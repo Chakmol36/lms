@@ -1,5 +1,4 @@
 const express = require("express");
-const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const path = require("path");
@@ -40,14 +39,24 @@ app.use(
 // CORS
 // ========================================
 
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || " https://lms-qeo6.onrender.com",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+const cors = require('cors');
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://lms-geo6.onrender.com'
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like Postman or mobile apps) or if in allowed list
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Blocked by CORS policy'));
+    }
+  },
+  credentials: true
+}));
 
 
 // ========================================
