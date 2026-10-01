@@ -2,518 +2,320 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
-
-  // =========================================
-  // CENTRAL THEME CONTROLLER
-  // =========================================
-
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [darkMode, setDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
 
-    // If the user has already chosen a theme,
-    // use that choice.
-    if (savedTheme === "light") {
-      return false;
-    }
+    if (savedTheme === "light") return false;
+    if (savedTheme === "dark") return true;
 
-    if (savedTheme === "dark") {
-      return true;
-    }
-
-    // Default theme
     return true;
   });
 
-
-  // =========================================
-  // APPLY THEME TO ENTIRE APPLICATION
-  // =========================================
-
   useEffect(() => {
-
     const html = document.documentElement;
 
     if (darkMode) {
-
       html.classList.add("dark");
-
-      localStorage.setItem(
-        "theme",
-        "dark"
-      );
-
+      localStorage.setItem("theme", "dark");
     } else {
-
       html.classList.remove("dark");
-
-      localStorage.setItem(
-        "theme",
-        "light"
-      );
-
+      localStorage.setItem("theme", "light");
     }
-
   }, [darkMode]);
 
-
-  // =========================================
-  // AUTHENTICATION
-  // =========================================
-
-  const token =
-    localStorage.getItem("token");
-
-
-  // =========================================
-  // GET USER ROLE
-  // =========================================
+  const token = localStorage.getItem("token");
 
   let role = null;
 
   if (token) {
-
     try {
-
-      const payload = JSON.parse(
-        atob(token.split(".")[1])
-      );
-
+      const payload = JSON.parse(atob(token.split(".")[1]));
       role = payload.role;
-
     } catch (error) {
-
-      console.error(
-        "Error reading token:",
-        error
-      );
-
+      console.error("Error reading token:", error);
     }
-
   }
 
-
-  // =========================================
-  // TOGGLE THEME
-  // =========================================
-
   const toggleTheme = () => {
-
-    setDarkMode(
-      (current) => !current
-    );
-
+    setDarkMode((current) => !current);
   };
-
-
-  // =========================================
-  // LOGOUT
-  // =========================================
 
   const logout = () => {
-
-    localStorage.removeItem(
-      "token"
-    );
-
-    window.location.href =
-      "/login";
-
+    localStorage.removeItem("token");
+    window.location.href = "/login";
   };
 
-
-  // =========================================
-  // NAVBAR
-  // =========================================
-
   return (
-
     <nav
       className="
         w-full
+        max-w-full
+        overflow-x-hidden
         bg-white
-        dark:bg-gray-950
-        text-gray-900
-        dark:text-white
-
         px-6
-        md:px-10
         py-5
-
-        flex
-        flex-wrap
-        justify-between
-        items-center
-
-        gap-4
-
-        border-b
-        border-gray-200
-        dark:border-gray-800
-
+        text-gray-900
         transition-colors
         duration-300
+        dark:bg-gray-950
+        dark:text-white
+        md:px-10
       "
     >
-
-      {/* ===================================== */}
-      {/* LOGO */}
-      {/* ===================================== */}
-
-      <Link
-        to="/"
-        className="
-          text-2xl
-          md:text-3xl
-          font-bold
-
-          text-gray-900
-          dark:text-white
-
-          hover:text-blue-600
-          dark:hover:text-blue-400
-
-          transition-colors
-        "
-      >
-        LMS 🚀
-      </Link>
-
-
-      {/* ===================================== */}
-      {/* MOBILE MENU TOGGLE */}
-      {/* ===================================== */}
-
-      <button
-        type="button"
-        onClick={() => setMenuOpen((open) => !open)}
-        aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
-        aria-expanded={menuOpen}
-        aria-controls="primary-navigation"
-        className="
-          md:hidden
-          w-10
-          h-10
-          rounded-lg
-          flex
-          items-center
-          justify-center
-          text-2xl
-          hover:bg-gray-100
-          dark:hover:bg-gray-800
-          focus:outline-none
-          focus:ring-2
-          focus:ring-blue-500
-        "
-      >
-        <span aria-hidden="true">{menuOpen ? "×" : "☰"}</span>
-      </button>
-
-
-      {menuOpen && (
-        <button
-          type="button"
-          aria-label="Close navigation menu"
-          onClick={() => setMenuOpen(false)}
-          className="fixed inset-0 z-40 bg-black/40 md:hidden"
-        />
-      )}
-
-      {/* ===================================== */}
-      {/* NAVIGATION */}
-      {/* ===================================== */}
-
       <div
-        id="primary-navigation"
-        onClick={() => setMenuOpen(false)}
-        className={`
-          fixed
-          inset-y-0
-          right-0
-          z-50
+        className="
+          mx-auto
           flex
-          h-dvh
-          w-4/5
-          max-w-sm
-          flex-col
-          items-stretch
-          gap-5
-          overflow-y-auto
-          bg-white
-          p-6
-          pt-6
-          shadow-2xl
-          transition-transform
-          duration-300
-          ease-in-out
-          dark:bg-gray-950
-          ${menuOpen ? "visible translate-x-0" : "invisible translate-x-full"}
-          md:visible
-          md:static
-          md:z-auto
-          md:h-auto
-          md:w-auto
-          md:max-w-none
-          md:flex-row
-          md:flex-wrap
-          md:items-center
-          md:gap-6
-          md:overflow-visible
-          md:bg-transparent
-          md:p-0
-          md:pt-0
-          md:shadow-none
-          md:transition-none
-          md:dark:bg-transparent
-        `}
+          w-full
+          max-w-7xl
+          flex-wrap
+          items-center
+          justify-between
+          gap-4
+          md:flex-nowrap
+        "
       >
-        <button
-          type="button"
-          onClick={() => setMenuOpen(false)}
-          aria-label="Close navigation menu"
-          className="mb-2 self-end rounded-lg px-3 py-2 text-2xl hover:bg-gray-100 dark:hover:bg-gray-800 md:hidden"
-        >
-          <span aria-hidden="true">×</span>
-        </button>
-        {/* ================================= */}
-        {/* HOME */}
-        {/* ================================= */}
-
         <Link
           to="/"
           className="
-            hover:text-blue-600
-            dark:hover:text-blue-400
+            text-2xl
+            font-bold
+            text-gray-900
             transition-colors
+            hover:text-blue-600
+            dark:text-white
+            dark:hover:text-blue-400
+            md:text-3xl
           "
         >
-          Home
+          LMS 🚀
         </Link>
-
-
-        {/* ================================= */}
-        {/* COURSES */}
-        {/* ================================= */}
-
-        <Link
-          to="/courses"
-          className="
-            hover:text-blue-600
-            dark:hover:text-blue-400
-            transition-colors
-          "
-        >
-          Courses
-        </Link>
-
-
-        {/* ================================= */}
-        {/* MY COURSES */}
-        {/* ================================= */}
-
-        {token && (
-
-          <Link
-            to="/my-courses"
-            className="
-              hover:text-blue-600
-              dark:hover:text-blue-400
-              transition-colors
-            "
-          >
-            My Courses
-          </Link>
-
-        )}
-
-
-        {/* ================================= */}
-        {/* INSTRUCTOR LINKS */}
-        {/* ================================= */}
-
-        {(role === "instructor" ||
-          role === "admin") && (
-
-          <>
-
-            <Link
-              to="/create-course"
-              className="
-                hover:text-blue-600
-                dark:hover:text-blue-400
-                transition-colors
-              "
-            >
-              Create Course
-            </Link>
-
-
-            <Link
-              to="/instructor"
-              className="
-                hover:text-blue-600
-                dark:hover:text-blue-400
-                transition-colors
-              "
-            >
-              Instructor Dashboard
-            </Link>
-
-          </>
-
-        )}
-
-
-        {/* ================================= */}
-        {/* ADMIN */}
-        {/* ================================= */}
-
-        {role === "admin" && (
-
-          <Link
-            to="/admin"
-            className="
-              hover:text-blue-600
-              dark:hover:text-blue-400
-              transition-colors
-            "
-          >
-            Admin
-          </Link>
-
-        )}
-
-
-        {/* ================================= */}
-        {/* CENTRAL THEME TOGGLE */}
-        {/* ================================= */}
 
         <button
           type="button"
-          onClick={toggleTheme}
-          aria-label={
-            darkMode
-              ? "Switch to light mode"
-              : "Switch to dark mode"
-          }
-          title={
-            darkMode
-              ? "Switch to light mode"
-              : "Switch to dark mode"
-          }
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={menuOpen}
+          aria-controls="primary-navigation"
           className="
-            w-10
-            h-10
-
-            rounded-full
-
             flex
+            h-10
+            w-10
             items-center
             justify-center
-
-            bg-gray-200
-            hover:bg-gray-300
-
-            dark:bg-gray-800
-            dark:hover:bg-gray-700
-
-            text-lg
-
-            transition-all
-            duration-300
-
-            hover:scale-105
-            active:scale-95
-
+            rounded-lg
+            text-2xl
+            hover:bg-gray-100
             focus:outline-none
             focus:ring-2
             focus:ring-blue-500
+            dark:hover:bg-gray-800
+            md:hidden
           "
         >
-
-          {darkMode
-            ? "☀️"
-            : "🌙"}
-
+          <span aria-hidden="true">{menuOpen ? "×" : "☰"}</span>
         </button>
 
+        {menuOpen && (
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            onClick={() => setMenuOpen(false)}
+            className="fixed inset-0 z-40 bg-black/40 md:hidden"
+          />
+        )}
 
-        {/* ================================= */}
-        {/* AUTHENTICATION */}
-        {/* ================================= */}
+        <div
+          id="primary-navigation"
+          onClick={() => setMenuOpen(false)}
+          className={`
+            fixed
+            inset-y-0
+            right-0
+            z-50
+            flex
+            h-dvh
+            w-4/5
+            max-w-sm
+            flex-col
+            items-stretch
+            gap-5
+            overflow-y-auto
+            bg-white
+            p-6
+            shadow-2xl
+            transition-transform
+            duration-300
+            ease-in-out
+            dark:bg-gray-950
+            ${
+              menuOpen
+                ? "visible translate-x-0"
+                : "invisible translate-x-full"
+            }
 
-        {!token ? (
+            md:!static
+            md:!visible
+            md:!z-auto
+            md:!h-auto
+            md:!w-auto
+            md:!max-w-none
+            md:!translate-x-0
+            md:flex-row
+            md:flex-nowrap
+            md:items-center
+            md:gap-6
+            md:overflow-visible
+            md:bg-transparent
+            md:p-0
+            md:shadow-none
+            md:transition-none
+            md:dark:bg-transparent
+          `}
+        >
+          <button
+            type="button"
+            onClick={() => setMenuOpen(false)}
+            aria-label="Close navigation menu"
+            className="
+              mb-2
+              self-end
+              rounded-lg
+              px-3
+              py-2
+              text-2xl
+              hover:bg-gray-100
+              dark:hover:bg-gray-800
+              md:hidden
+            "
+          >
+            <span aria-hidden="true">×</span>
+          </button>
 
-          <>
+          <Link
+            to="/"
+            className="transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+          >
+            Home
+          </Link>
 
-            {/* LOGIN */}
+          <Link
+            to="/courses"
+            className="transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+          >
+            Courses
+          </Link>
 
+          {token && (
             <Link
-              to="/login"
-              className="
-                hover:text-blue-600
-                dark:hover:text-blue-400
-                transition-colors
-              "
+              to="/my-courses"
+              className="transition-colors hover:text-blue-600 dark:hover:text-blue-400"
             >
-              Login
+              My Courses
             </Link>
+          )}
 
+          {(role === "instructor" || role === "admin") && (
+            <>
+              <Link
+                to="/create-course"
+                className="transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                Create Course
+              </Link>
 
-            {/* REGISTER */}
+              <Link
+                to="/instructor"
+                className="transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                Instructor Dashboard
+              </Link>
+            </>
+          )}
 
+          {role === "admin" && (
             <Link
-              to="/register"
-              className="
-                bg-blue-600
-                hover:bg-blue-700
-
-                text-white
-
-                px-4
-                py-2
-
-                rounded-lg
-
-                transition-colors
-              "
+              to="/admin"
+              className="transition-colors hover:text-blue-600 dark:hover:text-blue-400"
             >
-              Register
+              Admin
             </Link>
-
-          </>
-
-        ) : (
-
-          /* LOGOUT */
+          )}
 
           <button
             type="button"
-            onClick={logout}
+            onClick={toggleTheme}
+            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             className="
-              bg-red-600
-              hover:bg-red-700
-
-              text-white
-
-              px-4
-              py-2
-
-              rounded-lg
-
-              transition-colors
+              flex
+              h-10
+              w-10
+              items-center
+              justify-center
+              rounded-full
+              bg-gray-200
+              text-lg
+              transition-all
+              duration-300
+              hover:scale-105
+              hover:bg-gray-300
+              active:scale-95
+              focus:outline-none
+              focus:ring-2
+              focus:ring-blue-500
+              dark:bg-gray-800
+              dark:hover:bg-gray-700
             "
           >
-            Logout
+            {darkMode ? "☀️" : "🌙"}
           </button>
 
-        )}
+          {!token ? (
+            <>
+              <Link
+                to="/login"
+                className="transition-colors hover:text-blue-600 dark:hover:text-blue-400"
+              >
+                Login
+              </Link>
 
+              <Link
+                to="/register"
+                className="
+                  rounded-lg
+                  bg-blue-600
+                  px-4
+                  py-2
+                  text-white
+                  transition-colors
+                  hover:bg-blue-700
+                "
+              >
+                Register
+              </Link>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={logout}
+              className="
+                rounded-lg
+                bg-red-600
+                px-4
+                py-2
+                text-white
+                transition-colors
+                hover:bg-red-700
+              "
+            >
+              Logout
+            </button>
+          )}
+        </div>
       </div>
-
     </nav>
-
   );
-
 }
