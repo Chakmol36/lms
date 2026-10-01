@@ -2,6 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const path = require("path");
+const cors = require("cors"); // 1. Moved to the top with other imports
 require("dotenv").config();
 
 // Database
@@ -22,6 +23,13 @@ const app = express();
 
 
 // ========================================
+// PROXY SETUP (CRITICAL FOR RENDER)
+// ========================================
+// 2. Tells express-rate-limit to trust Render's load balancer IP
+app.set("trust proxy", 1);
+
+
+// ========================================
 // SECURITY
 // ========================================
 
@@ -38,25 +46,16 @@ app.use(
 // ========================================
 // CORS
 // ========================================
-
-const cors = require('cors');
-
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://lms-geo6.onrender.com'
-];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like Postman or mobile apps) or if in allowed list
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Blocked by CORS policy'));
-    }
-  },
-  credentials: true
-}));
+// 3. Simplified robust CORS config that won't throw 500 errors
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", 
+      "https://lms-geo6.onrender.com"
+    ],
+    credentials: true,
+  })
+);
 
 
 // ========================================
@@ -121,12 +120,9 @@ app.use("/api/auth", authLimiter);
 // Serve uploaded images/videos
 app.use(
   "/uploads",
-  express.static(
-    path.join(__dirname, "uploads"),
-    {
-      fallthrough: false,
-    }
-  )
+  express.static(path.join(__dirname, "uploads"), {
+    fallthrough: false,
+  })
 );
 
 
@@ -134,50 +130,15 @@ app.use(
 // API ROUTES
 // ========================================
 
-app.use(
-  "/api/auth",
-  authRoutes
-);
-
-app.use(
-  "/api/users",
-  userRoutes
-);
-
-app.use(
-  "/api/courses",
-  courseRoutes
-);
-
-app.use(
-  "/api/enrollment",
-  enrollmentRoutes
-);
-
-app.use(
-  "/api/progress",
-  progressRoutes
-);
-
-app.use(
-  "/api/admin",
-  adminRoutes
-);
-
-app.use(
-  "/api/analytics",
-  analyticsRoutes
-);
-
-app.use(
-  "/api/quizzes",
-  quizRoutes
-);
-
-app.use(
-  "/api/certificates",
-  certificateRoutes
-);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/courses", courseRoutes);
+app.use("/api/enrollment", enrollmentRoutes);
+app.use("/api/progress", progressRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/quizzes", quizRoutes);
+app.use("/api/certificates", certificateRoutes);
 
 
 // ========================================
@@ -208,7 +169,6 @@ app.use((req, res) => {
 // ========================================
 
 app.use((err, req, res, next) => {
-
   console.error("Server error:", err);
 
   // Multer errors
@@ -219,19 +179,13 @@ app.use((err, req, res, next) => {
   }
 
   // Custom upload/filter errors
-  if (
-    err.message &&
-    err.message.startsWith("Invalid image file")
-  ) {
+  if (err.message && err.message.startsWith("Invalid image file")) {
     return res.status(400).json({
       message: err.message,
     });
   }
 
-  if (
-    err.message &&
-    err.message.startsWith("Invalid video file")
-  ) {
+  if (err.message && err.message.startsWith("Invalid video file")) {
     return res.status(400).json({
       message: err.message,
     });
