@@ -37,6 +37,11 @@ export default function Login() {
       console.log("Login token:", token);
 
       localStorage.setItem("token", token);
+      
+      localStorage.setItem(
+  "user",
+  JSON.stringify(res.data.user)
+);
 
       console.log(
         "Token after saving:",

@@ -177,9 +177,10 @@ exports.login = (req, res) => {
         jwt.sign(
 
           {
-            id: user.id,
-            role: user.role
-          },
+  id: user.id,
+  name: user.name,
+  role: user.role
+},
 
           process.env.JWT_SECRET,
 
