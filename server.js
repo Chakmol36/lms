@@ -47,13 +47,17 @@ app.use(
 // CORS
 // ========================================
 // 3. Simplified robust CORS config that won't throw 500 errors
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://lms-qeo6.onrender.com"
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", 
-      "https://lms-geo6.onrender.com"
-    ],
+    origin: allowedOrigins,
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 
